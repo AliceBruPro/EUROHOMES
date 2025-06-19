@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <title>{{ inmueble['titulo'] }} - EuroHome</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f8f9fa;
+      color: #212529;
+    }
+    header {
+      background: #0d6efd;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+    .info {
+      margin-bottom: 1rem;
+    }
+    .precio {
+      font-size: 1.5rem;
+      color: #198754;
+      font-weight: bold;
+    }
+    #map {
+      height: 300px;
+      margin-top: 1rem;
+      border-radius: 10px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #0d6efd;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 1rem;
+    }
+<br>
+<a class="btn" href="{{ url_for('index', lang=lang) }}">⬅️ {{ textos['volver'] }}</a>
+  </style>
+</head>
+<body>
+  <header>
+    <h1>{{ inmueble['titulo'] }}</h1>
+  </header>
+
+  <main>
+    <div class="info">
+  <div class="precio">{{ inmueble['precio'] }} {{ inmueble.get('moneda', 'EUR') }}</div>
+  <p>{{ textos.get(inmueble['tipo'], inmueble['tipo']) }}</p>
+  <p><strong>{{ inmueble.get('ciudad', '') }}, {{ inmueble.get('pais', '') }}</strong></p>
+  <p>{{ inmueble.get('descripcion', textos['sin_descripcion']) }}</p>
+</div>
+
+{% if inmueble.imagen %}
+  <div style="text-align: center; margin-bottom: 1rem;">
+    <img src="{{ url_for('static', filename='uploads/' + inmueble.imagen) }}" alt="Imagen del inmueble" style="max-width: 100%; border-radius: 10px;">
+  </div>
+{% endif %}
+
+
+
+    {% if inmueble.lat and inmueble.lon %}
+    <div id="map"></div>
+    {% endif %}
+
+    <a class="btn" href="mailto:info@eurohome.com?subject=Interés por inmueble {{ inmueble['id'] }}">
+      📧 {{ textos['contactar'] }}
+    </a>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  {% if inmueble.lat and inmueble.lon %}
+  <script>
+    var map = L.map('map').setView([{{ inmueble.lat }}, {{ inmueble.lon }}], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    L.marker([{{ inmueble.lat }}, {{ inmueble.lon }}]).addTo(map)
+      .bindPopup("{{ inmueble['titulo'] }}").openPopup();
+  </script>
+  {% endif %}
+</body>
+</html>
+

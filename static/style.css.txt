@@ -1,0 +1,103 @@
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #f9fafb;
+    color: #333;
+    margin: 0; padding: 1rem;
+}
+
+header, main {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-weight: 300;
+    margin-bottom: 1rem;
+}
+
+form label {
+    margin-right: 1rem;
+    font-weight: 500;
+}
+
+input[type="text"], select {
+    padding: 0.3rem 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #2563eb;
+}
+
+.listado-inmuebles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.tarjeta-inmueble {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.1);
+    padding: 1rem;
+    width: calc(50% - 1rem);
+    box-sizing: border-box;
+}
+
+.tarjeta-inmueble img {
+    max-width: 100%;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+}
+
+.imagen-placeholder {
+    background-color: #ddd;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+}
+
+.detalle-inmueble {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.imagenes-carrusel img {
+    max-width: 300px;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+
+.info-detalle p {
+    margin: 0.3rem 0;
+    line-height: 1.3;
+    font-weight: 400;
+}
+
+@media (max-width: 600px) {
+    .tarjeta-inmueble {
+        width: 100%;
+    }
+    .detalle-inmueble {
+        flex-direction: column;
+        align-items: center;
+    }
+    .imagenes-carrusel img {
+        max-width: 90vw;
+    }
+}

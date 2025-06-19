@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ textos['inmuebles_disponibles'] }} - EuroHome</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f8f9fa;
+      color: #212529;
+    }
+    header {
+      background-color: #0d6efd;
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    header select {
+      padding: 0.3rem;
+      font-size: 1rem;
+    }
+    main {
+      padding: 2rem;
+    }
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    label {
+      display: flex;
+      flex-direction: column;
+      font-weight: 600;
+    }
+    input, select, button {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .content-container {
+      display: flex;
+      gap: 1rem;
+    }
+    #map {
+      flex: 1 1 50%;
+      height: 600px;
+      border-radius: 10px;
+    }
+    .inmuebles-list {
+      flex: 1 1 50%;
+      max-height: 600px;
+      overflow-y: auto;
+      background: white;
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .inmuebles-list ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .inmuebles-list li {
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #ddd;
+    }
+    a {
+      color: #0d6efd;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .new-button {
+      display: inline-block;
+      background-color: #198754;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+  </style>
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  ></script>
+</head>
+<body>
+  <header>
+    <h1>{{ textos['inmuebles_disponibles'] }}</h1>
+    <form method="get" action="{{ url_for('index') }}">
+      <select name="lang" onchange="this.form.submit()">
+        <option value="es" {% if lang == 'es' %}selected{% endif %}>🇪🇸 Español</option>
+        <option value="en" {% if lang == 'en' %}selected{% endif %}>🇬🇧 English</option>
+        <option value="fr" {% if lang == 'fr' %}selected{% endif %}>🇫🇷 Français</option>
+        <option value="de" {% if lang == 'de' %}selected{% endif %}>🇩🇪 Deutsch</option>
+      </select>
+    </form>
+  </header>
+
+  <main>
+    <form method="get" action="{{ url_for('index') }}">
+      <input type="hidden" name="lang" value="{{ lang }}">
+      <label>
+        {{ textos['pais'] }}
+        <input type="text" name="pais" value="{{ pais }}">
+      </label>
+      <label>
+        {{ textos['ciudad'] }}
+        <input type="text" name="ciudad" value="{{ ciudad }}">
+      </label>
+      <label>
+        {{ textos['operacion'] }}
+        <select name="operacion">
+          <option value="">--</option>
+          <option value="venta" {% if operacion == 'venta' %}selected{% endif %}>{{ textos['venta'] }}</option>
+          <option value="alquiler" {% if operacion == 'alquiler' %}selected{% endif %}>{{ textos['alquiler'] }}</option>
+        </select>
+      </label>
+<label>
+  {{ textos['tipo_inmueble_label'] }}
+  <select name="tipo_inmueble">
+    <option value="">{{ '--' }}</option>
+    <option value="apartamento" {% if tipo_inmueble == 'apartamento' %}selected{% endif %}>{{ textos['tipo_inmueble']['apartamento'] }}</option>
+    <option value="casa" {% if tipo_inmueble == 'casa' %}selected{% endif %}>{{ textos['tipo_inmueble']['casa'] }}</option>
+    <option value="chalet" {% if tipo_inmueble == 'chalet' %}selected{% endif %}>{{ textos['tipo_inmueble']['chalet'] }}</option>
+    <option value="estudio" {% if tipo_inmueble == 'estudio' %}selected{% endif %}>{{ textos['tipo_inmueble']['estudio'] }}</option>
+    <option value="atico" {% if tipo_inmueble == 'atico' %}selected{% endif %}>{{ textos['tipo_inmueble']['atico'] }}</option>
+    <option value="piso" {% if tipo_inmueble == 'piso' %}selected{% endif %}>{{ textos['tipo_inmueble']['piso'] }}</option>
+    <option value="duplex" {% if tipo_inmueble == 'duplex' %}selected{% endif %}>{{ textos['tipo_inmueble']['duplex'] }}</option>
+    <option value="local_comercial" {% if tipo_inmueble == 'local_comercial' %}selected{% endif %}>{{ textos['tipo_inmueble']['local_comercial'] }}</option>
+    <option value="oficina" {% if tipo_inmueble == 'oficina' %}selected{% endif %}>{{ textos['tipo_inmueble']['oficina'] }}</option>
+    <option value="terreno" {% if tipo_inmueble == 'terreno' %}selected{% endif %}>{{ textos['tipo_inmueble']['terreno'] }}</option>
+  </select>
+</label>
+
+      <label>
+        {{ textos['precio_min'] }}
+        <input type="number" name="precio_min" value="{{ precio_min }}">
+      </label>
+      <label>
+        {{ textos['precio_max'] }}
+        <input type="number" name="precio_max" value="{{ precio_max }}">
+      </label>
+      <button type="submit">{{ textos['buscar'] }}</button>
+    </form>
+
+    <p>Total de inmuebles: {{ inmuebles | length }}</p>
+
+    <div class="content-container">
+      <div id="map"></div>
+
+      <div class="inmuebles-list">
+        <ul>
+          {% for inmueble in inmuebles %}
+          <li>
+            <a href="{{ url_for('detalle', id=inmueble['id'], lang=lang) }}">
+              {{ inmueble['titulo'] }}
+            </a><br>
+            {{ inmueble['precio'] }} {{ inmueble.get('moneda', 'EUR') }}<br>
+            {{ textos[inmueble['tipo']] }}<br>
+            {{ inmueble.get('ciudad', '') }}, {{ inmueble.get('pais', '') }}
+          </li>
+          {% else %}
+          <li>{{ textos['inmuebles_disponibles'] }}: 0</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <a href="{{ url_for('nuevo', lang=lang) }}" class="new-button">
+      + {{ textos['nuevo_inmueble'] }}
+    </a>
+  </main>
+
+  <script>
+    const inmuebles = {{ inmuebles|tojson }};
+    const map = L.map('map').setView([40.0, -3.5], 5); // Vista general España
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    inmuebles.forEach(inmueble => {
+      if (inmueble.lat && inmueble.lon) {
+        L.marker([inmueble.lat, inmueble.lon])
+          .addTo(map)
+          .bindPopup(`<b>${inmueble.titulo}</b><br>${inmueble.precio} ${inmueble.moneda}`);
+      }
+    });
+  </script>
+</body>
+</html>
