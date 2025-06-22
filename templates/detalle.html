@@ -5,6 +5,8 @@
   <title>{{ inmueble['titulo'] }} - EuroHome</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <a href="{{ url_for('editar', id=inmueble.id, lang=lang) }}" class="btn">Editar</a>
+
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;

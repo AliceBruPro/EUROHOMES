@@ -2,7 +2,7 @@
 <html lang="{{ lang }}">
 <head>
   <meta charset="UTF-8">
-  <title>{{ textos['nuevo_inmueble'] }}</title>
+  <title>Editar Inmueble</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -80,60 +80,59 @@
 </head>
 <body>
   <div class="container">
-    <h1>{{ textos['nuevo_inmueble'] }}</h1>
+    <h1>Editar Inmueble</h1>
 
-    <form method="post" enctype="multipart/form-data" action="{{ url_for('nuevo', lang=lang) }}">
+    <form method="post" enctype="multipart/form-data" action="{{ url_for('editar', id=inmueble.id, lang=lang) }}">
       <label for="titulo">Título:
-        <input type="text" id="titulo" name="titulo" required>
+        <input type="text" id="titulo" name="titulo" value="{{ inmueble.titulo }}" required>
       </label>
 
       <label for="tipo">Tipo:
         <select id="tipo" name="tipo" required>
-          <option value="nave">{{ textos['tipo_inmueble'].get('nave', 'Nave industrial') }}</option>
-          <option value="oficina">{{ textos['tipo_inmueble'].get('oficina', 'Oficina') }}</option>
-          <option value="local">{{ textos['tipo_inmueble'].get('local', 'Local') }}</option>
-          <option value="vivienda">{{ textos['tipo_inmueble'].get('vivienda', 'Vivienda') }}</option>
+          {% for clave, nombre in textos['tipo_inmueble'].items() %}
+            <option value="{{ clave }}" {% if inmueble.tipo == clave %}selected{% endif %}>{{ nombre }}</option>
+          {% endfor %}
         </select>
       </label>
 
       <label for="operacion">Operación:
         <select id="operacion" name="operacion" required>
-          <option value="venta">{{ textos.get('venta', 'Venta') }}</option>
-          <option value="alquiler">{{ textos.get('alquiler', 'Alquiler') }}</option>
+          <option value="venta" {% if inmueble.operacion == 'venta' %}selected{% endif %}>{{ textos['venta'] }}</option>
+          <option value="alquiler" {% if inmueble.operacion == 'alquiler' %}selected{% endif %}>{{ textos['alquiler'] }}</option>
         </select>
       </label>
 
       <label for="pais">País:
-        <input type="text" id="pais" name="pais">
+        <input type="text" id="pais" name="pais" value="{{ inmueble.pais }}">
       </label>
 
       <label for="ciudad">Ciudad:
-        <input type="text" id="ciudad" name="ciudad">
+        <input type="text" id="ciudad" name="ciudad" value="{{ inmueble.ciudad }}">
       </label>
 
       <label for="moneda">Moneda:
         <select id="moneda" name="moneda">
-          <option value="EUR">EUR</option>
-          <option value="USD">USD</option>
-          <option value="GBP">GBP</option>
+          <option value="EUR" {% if inmueble.moneda == 'EUR' %}selected{% endif %}>EUR</option>
+          <option value="USD" {% if inmueble.moneda == 'USD' %}selected{% endif %}>USD</option>
+          <option value="GBP" {% if inmueble.moneda == 'GBP' %}selected{% endif %}>GBP</option>
         </select>
       </label>
 
       <label for="precio">Precio:
-        <input type="number" id="precio" name="precio" min="0" step="any">
+        <input type="number" id="precio" name="precio" min="0" step="any" value="{{ inmueble.precio }}">
       </label>
 
       <label for="descripcion">{{ textos.get('descripcion', 'Descripción') }}:
-        <textarea id="descripcion" name="descripcion" rows="4"></textarea>
+        <textarea id="descripcion" name="descripcion" rows="4">{{ inmueble.descripcion }}</textarea>
       </label>
 
-      <label for="imagen">Imagen:
+      <label for="imagen">Imagen (opcional):
         <input type="file" id="imagen" name="imagen" accept="image/*">
       </label>
 
       <div class="actions">
-        <a href="{{ url_for('index', lang=lang) }}">{{ textos['volver'] }}</a>
-        <button type="submit">{{ textos['nuevo_inmueble'] }}</button>
+        <a href="{{ url_for('detalle', id=inmueble.id, lang=lang) }}">{{ textos['volver'] }}</a>
+        <button type="submit">Guardar cambios</button>
       </div>
     </form>
   </div>

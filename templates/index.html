@@ -170,14 +170,18 @@
       <div class="inmuebles-list">
         <ul>
           {% for inmueble in inmuebles %}
+
           <li>
-            <a href="{{ url_for('detalle', id=inmueble['id'], lang=lang) }}">
-              {{ inmueble['titulo'] }}
-            </a><br>
-            {{ inmueble['precio'] }} {{ inmueble.get('moneda', 'EUR') }}<br>
-            {{ textos[inmueble['tipo']] }}<br>
-            {{ inmueble.get('ciudad', '') }}, {{ inmueble.get('pais', '') }}
-          </li>
+  <a href="{{ url_for('detalle', id=inmueble['id'], lang=lang) }}">
+    {{ inmueble['titulo'] }}
+  </a><br>
+  {{ inmueble['precio'] }} {{ inmueble.get('moneda', 'EUR') }}<br>
+  {{ textos[inmueble['tipo']] }}<br>
+  {{ inmueble.get('ciudad', '') }}, {{ inmueble.get('pais', '') }}<br>
+
+  <!-- Botón Editar -->
+  <a href="{{ url_for('editar_inmueble', id=inmueble['id']) }}" style="color: #ffc107;">✏️ {{ textos['editar'] if 'editar' in textos else 'Editar' }}</a>
+</li>
           {% else %}
           <li>{{ textos['inmuebles_disponibles'] }}: 0</li>
           {% endfor %}
